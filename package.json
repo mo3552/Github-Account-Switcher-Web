@@ -1,0 +1,64 @@
+{
+	"name": "git-credential-manager",
+	"version": "1.0.0",
+	"description": "Git 글로벌 설정 관리 및 GitHub 자격 증명 자동 삭제 도구",
+	"main": "dist-electron/main.js",
+	"homepage": "./",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"build:electron": "npm run build && electron-builder",
+		"preview": "vite preview",
+		"electron": "wait-on tcp:5173 && cross-env IS_DEV=true electron .",
+		"electron:serve": "cross-env IS_DEV=true npm run dev",
+		"electron:build": "npm run build && electron-builder",
+		"electron:preview": "npm run build && electron ."
+	},
+	"keywords": [
+		"git",
+		"credential",
+		"manager",
+		"electron",
+		"vue",
+		"typescript"
+	],
+	"author": "Git Credential Manager",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^20.10.0",
+		"@vitejs/plugin-vue": "^4.5.0",
+		"concurrently": "^8.2.2",
+		"cross-env": "^7.0.3",
+		"electron": "^27.1.0",
+		"electron-builder": "^24.6.4",
+		"typescript": "^5.2.2",
+		"vite": "^5.0.0",
+		"vite-plugin-electron": "^0.15.5",
+		"vite-plugin-electron-renderer": "^0.14.5",
+		"vue-tsc": "^1.8.22",
+		"wait-on": "^7.2.0"
+	},
+	"dependencies": {
+		"vue": "^3.3.8"
+	},
+	"build": {
+		"appId": "com.gitcredentialmanager.app",
+		"productName": "Git Credential Manager",
+		"directories": {
+			"output": "release"
+		},
+		"files": [
+			"dist/**/*",
+			"dist-electron/**/*",
+			"node_modules/**/*"
+		],
+		"win": {
+			"target": "nsis",
+			"icon": "public/favicon.ico"
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true
+		}
+	}
+}
