@@ -489,8 +489,8 @@ onMounted(() => {
 
 .config-item span {
 	color: #1f2937;
-	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 	font-size: 0.875rem;
+	font-weight: 600;
 }
 
 .accounts-list {
