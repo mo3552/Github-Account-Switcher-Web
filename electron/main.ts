@@ -252,15 +252,21 @@ function createWindow() {
 		width: 800,
 		height: 800,
 		resizable: false,
-		show: false, // 윈도우를 숨겨진 상태로 생성
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true,
 			preload: path.join(__dirname, 'preload.js'),
+			// 하드웨어 가속 비활성화로 깜빡임 방지
+			webSecurity: true,
+			allowRunningInsecureContent: false,
 		},
 		title: 'Git Credential Manager',
 		icon: path.join(__dirname, '../public/favicon.ico'),
 		backgroundColor: '#f8fafc', // 배경색 미리 설정
+		// 윈도우 생성 시 최소화 방지
+		minimizable: true,
+		maximizable: false,
+		fullscreenable: false,
 	});
 
 	// 메뉴 생성
@@ -276,11 +282,6 @@ function createWindow() {
 	} else {
 		mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 	}
-
-	// 페이지 로딩이 완료되면 윈도우 표시
-	mainWindow.once('ready-to-show', () => {
-		mainWindow?.show();
-	});
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
@@ -440,6 +441,9 @@ if (!gotTheLock) {
 			mainWindow.focus();
 		}
 	});
+
+	// 앱 시작 시 하드웨어 가속 비활성화
+	app.disableHardwareAcceleration();
 
 	// 앱 이벤트 핸들러
 	app.whenReady().then(createWindow);
