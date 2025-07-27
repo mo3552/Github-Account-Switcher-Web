@@ -12,6 +12,10 @@
 		"electron": "wait-on tcp:5173 && cross-env IS_DEV=true electron .",
 		"electron:serve": "cross-env IS_DEV=true npm run dev",
 		"electron:build": "npm run build && electron-builder",
+		"electron:build:win": "npm run build && electron-builder --win",
+		"electron:build:mac": "npm run build && electron-builder --mac",
+		"electron:build:linux": "npm run build && electron-builder --linux",
+		"electron:build:all": "npm run build && electron-builder -mwl",
 		"electron:preview": "npm run build && electron ."
 	},
 	"keywords": [
@@ -54,6 +58,14 @@
 		],
 		"win": {
 			"target": "nsis",
+			"icon": "public/favicon.ico"
+		},
+		"mac": {
+			"target": "dmg",
+			"icon": "public/favicon.ico"
+		},
+		"linux": {
+			"target": "AppImage",
 			"icon": "public/favicon.ico"
 		},
 		"nsis": {

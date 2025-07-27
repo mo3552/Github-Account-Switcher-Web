@@ -24,6 +24,7 @@ Electron 기반 데스크탑 애플리케이션으로, Git 글로벌 설정(`use
 -   **통신 방식**: IPC (Inter-Process Communication)
 -   **시스템 명령 실행**: Node.js `child_process`
 -   **폰트**: Pretendard
+-   **크로스 플랫폼 지원**: Windows, macOS, Linux
 
 ## 🚀 설치 및 실행
 
@@ -44,14 +45,23 @@ npm run electron:serve
 ### 빌드
 
 ```bash
-# 프로덕션 빌드
+# 현재 플랫폼용 빌드
 npm run electron:build
+
+# 특정 플랫폼용 빌드
+npm run electron:build:win    # Windows용 (.exe)
+npm run electron:build:mac    # macOS용 (.dmg)
+npm run electron:build:linux  # Linux용 (.AppImage)
+
+# 모든 플랫폼용 빌드 (크로스 컴파일)
+npm run electron:build:all
 ```
 
 빌드된 파일은 `release/` 폴더에 생성됩니다:
 
--   `Git Credential Manager Setup 1.0.0.exe` - Windows 설치 프로그램
--   `win-unpacked/Git Credential Manager.exe` - 실행 파일
+-   **Windows**: `Git Credential Manager Setup 1.0.0.exe` - 설치 프로그램
+-   **macOS**: `Git Credential Manager-1.0.0.dmg` - 디스크 이미지
+-   **Linux**: `Git Credential Manager-1.0.0.AppImage` - 실행 파일
 
 ## 📁 프로젝트 구조
 
@@ -80,9 +90,11 @@ github_switcher_web/
 -   `git config --global user.name` 및 `git config --global user.email` 명령어를 통해 Git 글로벌 설정을 조회하고 변경
 -   설정 변경 시 입력값 검증 (이름, 이메일 형식)
 
-### 2. 자격 증명 자동 삭제
+### 2. 자격 증명 자동 삭제 (크로스 플랫폼)
 
--   Git 설정 변경 성공 시 `cmdkey /delete:git:https://github.com` 명령어로 Windows 자격 증명 관리자에서 GitHub 관련 자격 증명 삭제
+-   **Windows**: `cmdkey /delete:git:https://github.com` 명령어로 Windows 자격 증명 관리자에서 삭제
+-   **macOS**: Git Credential Manager 또는 osxkeychain을 통해 Keychain Access에서 삭제
+-   **Linux**: Git Credential Manager를 통해 자격 증명 삭제
 -   인증 문제 예방 및 새로운 계정으로의 원활한 전환 지원
 
 ### 3. 계정 관리 시스템

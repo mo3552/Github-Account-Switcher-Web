@@ -332,9 +332,41 @@ async function updateGitConfig(
 		await execAsync(`git config --global user.name "${name}"`);
 		await execAsync(`git config --global user.email "${email}"`);
 
-		// GitHub 자격 증명 삭제
+		// GitHub 자격 증명 삭제 (크로스 플랫폼)
 		try {
-			await execAsync('cmdkey /delete:git:https://github.com');
+			if (process.platform === 'win32') {
+				// Windows: cmdkey 사용
+				await execAsync('cmdkey /delete:git:https://github.com');
+			} else if (process.platform === 'darwin') {
+				// macOS: 여러 방법 시도
+				try {
+					// 1. Git Credential Manager (권장)
+					await execAsync(
+						'git credential-manager delete https://github.com'
+					);
+				} catch (error1) {
+					try {
+						// 2. osxkeychain 사용
+						await execAsync('git credential-osxkeychain erase');
+					} catch (error2) {
+						// 3. 수동으로 Keychain에서 삭제 안내
+						console.log(
+							'macOS Keychain에서 수동으로 GitHub 자격 증명을 삭제해주세요.'
+						);
+					}
+				}
+			} else {
+				// Linux: Git Credential Manager 사용
+				try {
+					await execAsync(
+						'git credential-manager delete https://github.com'
+					);
+				} catch (error) {
+					// Linux에서 실패 시 안내
+					console.log('Linux에서 자격 증명 삭제에 실패했습니다.');
+				}
+			}
+
 			return {
 				success: true,
 				message:
