@@ -252,6 +252,7 @@ function createWindow() {
 		width: 800,
 		height: 800,
 		resizable: false,
+		show: false, // 윈도우를 숨겨진 상태로 생성
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true,
@@ -259,6 +260,7 @@ function createWindow() {
 		},
 		title: 'Git Credential Manager',
 		icon: path.join(__dirname, '../public/favicon.ico'),
+		backgroundColor: '#f8fafc', // 배경색 미리 설정
 	});
 
 	// 메뉴 생성
@@ -274,6 +276,11 @@ function createWindow() {
 	} else {
 		mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 	}
+
+	// 페이지 로딩이 완료되면 윈도우 표시
+	mainWindow.once('ready-to-show', () => {
+		mainWindow?.show();
+	});
 
 	mainWindow.on('closed', () => {
 		mainWindow = null;
