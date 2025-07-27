@@ -416,17 +416,36 @@ ipcMain.handle(
 	}
 );
 
-// 앱 이벤트 핸들러
-app.whenReady().then(createWindow);
+// 단일 인스턴스 체크
+const gotTheLock = app.requestSingleInstanceLock();
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
-});
+if (!gotTheLock) {
+	// 이미 다른 인스턴스가 실행 중인 경우
+	app.quit();
+} else {
+	// 두 번째 인스턴스가 실행되려고 할 때
+	app.on('second-instance', (event, commandLine, workingDirectory) => {
+		// 이미 실행 중인 윈도우가 있으면 포커스
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) {
+				mainWindow.restore();
+			}
+			mainWindow.focus();
+		}
+	});
 
-app.on('activate', () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
-	}
-});
+	// 앱 이벤트 핸들러
+	app.whenReady().then(createWindow);
+
+	app.on('window-all-closed', () => {
+		if (process.platform !== 'darwin') {
+			app.quit();
+		}
+	});
+
+	app.on('activate', () => {
+		if (BrowserWindow.getAllWindows().length === 0) {
+			createWindow();
+		}
+	});
+}
